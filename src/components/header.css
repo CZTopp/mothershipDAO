@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  height: 120px;
+  background-color: #f1f1f1;
+  width: 1440px;
+}
+.afro {
+  font-weight: bold;
+  font-family: inherit;
+}
