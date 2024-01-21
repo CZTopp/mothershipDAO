@@ -1,32 +1,32 @@
-import { useEffect, useMemo, useState } from "react"
-import { ethers } from "ethers"
-import { UnsupportedChainIdError } from "@web3-react/core"
+import { useEffect, useMemo, useState } from 'react'
+import { ethers } from 'ethers'
+import { UnsupportedChainIdError } from '@web3-react/core'
 
-import { ThirdwebSDK } from "@3rdweb/sdk"
-import { useWeb3 } from "@3rdweb/hooks"
+import { ThirdwebSDK } from '@3rdweb/sdk'
+import { useWeb3 } from '@3rdweb/hooks'
 
-import { Header } from "./components/header"
+import { Header } from './components/header'
 
-// We instantiate the sdk on Rinkeby.
-const sdk = new ThirdwebSDK("rinkeby")
+// We instantiate the sdk on Goerli.
+const sdk = new ThirdwebSDK('goerli')
 
 // We can grab a reference to our ERC-1155 contract.
 const bundleDropModule = sdk.getBundleDropModule(
-  "0xb77030a4eC3AC389A31E96BafC4B8Ad36Ed9ba21"
+  '0xb77030a4eC3AC389A31E96BafC4B8Ad36Ed9ba21'
 )
 
 const tokenModule = sdk.getTokenModule(
-  "0x632e02bDDDF6DCe97284FE0e1e0f6C07ef008785"
+  '0x632e02bDDDF6DCe97284FE0e1e0f6C07ef008785'
 )
 
 const voteModule = sdk.getVoteModule(
-  "0x5D87b01759f796C481327cc871aD4533b6dFda89"
+  '0x5D87b01759f796C481327cc871aD4533b6dFda89'
 )
 
 const App = () => {
   // Use the connectWallet hook thirdweb gives us.
   const { connectWallet, address, error, provider } = useWeb3()
-  console.log("👋 Address:", address)
+  console.log('👋 Address:', address)
 
   // The signer is required to sign transactions on the blockchain.
   // Without it we can only read data, not write.
@@ -54,9 +54,9 @@ const App = () => {
     try {
       const proposals = await voteModule.getAll()
       setProposals(proposals)
-      console.log("🌈 Proposals:", proposals)
+      console.log('🌈 Proposals:', proposals)
     } catch (error) {
-      console.log("failed to get proposals", error)
+      console.log('failed to get proposals', error)
     }
   }, [hasClaimedNFT])
 
@@ -80,18 +80,18 @@ const App = () => {
       )
       setHasVoted(hasVoted)
       if (hasVoted) {
-        console.log("🥵 User has already voted")
+        console.log('🥵 User has already voted')
       } else {
-        console.log("🙂 User has not voted yet")
+        console.log('🙂 User has not voted yet')
       }
     } catch (error) {
-      console.error("Failed to check if wallet has voted", error)
+      console.error('Failed to check if wallet has voted', error)
     }
   }, [hasClaimedNFT, proposals, address])
 
   // A fancy function to shorten someones wallet address, no need to show the whole thing.
   const shortenAddress = (str) => {
-    return str.substring(0, 6) + "..." + str.substring(str.length - 4)
+    return str.substring(0, 6) + '...' + str.substring(str.length - 4)
   }
 
   // This useEffect grabs all the addresses of our members holding our NFT.
@@ -103,11 +103,11 @@ const App = () => {
     // Just like we did in the 7-airdrop-token.js file! Grab the users who hold our NFT
     // with tokenId 0.
     try {
-      const memberAddresses = await bundleDropModule.getAllClaimerAddresses("0")
+      const memberAddresses = await bundleDropModule.getAllClaimerAddresses('0')
       setMemberAddresses(memberAddresses)
-      console.log("🚀 Members addresses", memberAddresses)
+      console.log('🚀 Members addresses', memberAddresses)
     } catch (error) {
-      console.error("failed to get member list", error)
+      console.error('failed to get member list', error)
     }
   }, [hasClaimedNFT])
 
@@ -121,9 +121,9 @@ const App = () => {
     try {
       const amounts = await tokenModule.getAllHolderBalances()
       setMemberTokenAmounts(amounts)
-      console.log("👜 Amounts", amounts)
+      console.log('👜 Amounts', amounts)
     } catch (error) {
-      console.error("failed to get token amounts", error)
+      console.error('failed to get token amounts', error)
     }
   }, [hasClaimedNFT])
 
@@ -156,31 +156,31 @@ const App = () => {
     }
 
     // Check if the user has the NFT by using bundleDropModule.balanceOf
-    const balance = await bundleDropModule.balanceOf(address, "0")
+    const balance = await bundleDropModule.balanceOf(address, '0')
 
     try {
       // If balance is greater than 0, they have our NFT!
       if (balance.gt(0)) {
         setHasClaimedNFT(true)
-        console.log("🌟 this user has a membership NFT!")
+        console.log('🌟 this user has a membership NFT!')
       } else {
         setHasClaimedNFT(false)
         console.log("😭 this user doesn't have a membership NFT.")
       }
     } catch (error) {
       setHasClaimedNFT(false)
-      console.error("failed to nft balance", error)
+      console.error('failed to nft balance', error)
     }
   }, [address])
 
   if (error instanceof UnsupportedChainIdError) {
     return (
       <>
-        <div className="unsupported-network">
+        <div className='unsupported-network'>
           <Header />
-          <h2>Please connect to Rinkeby</h2>
+          <h2>Please connect to Goerli</h2>
           <p>
-            This dapp only works on the Rinkeby network, please switch networks
+            This dapp only works on the Goerli network, please switch networks
             in your connected wallet.
           </p>
         </div>
@@ -193,10 +193,10 @@ const App = () => {
   if (!address) {
     return (
       <>
-        <div className="landing">
+        <div className='landing'>
           <Header />
           <h1>Welcome to MothershipDAO</h1>
-          <button id="landing-button" onClick={() => connectWallet("injected")}>
+          <button id='landing-button' onClick={() => connectWallet('injected')}>
             Connect your wallet
           </button>
         </div>
@@ -209,14 +209,14 @@ const App = () => {
   if (hasClaimedNFT) {
     return (
       <>
-        <div className="member-page">
+        <div className='member-page'>
           <Header />
           <h1>MothershipDAO Member Page</h1>
           <p>Congratulations on being a member</p>
           <div>
             <div>
               <h2>Member List</h2>
-              <table className="card">
+              <table className='card'>
                 <thead>
                   <tr>
                     <th>Address</th>
@@ -254,7 +254,7 @@ const App = () => {
                     }
                     proposal.votes.forEach((vote) => {
                       const elem = document.getElementById(
-                        proposal.proposalId + "-" + vote.type
+                        proposal.proposalId + '-' + vote.type
                       )
 
                       if (elem.checked) {
@@ -311,15 +311,15 @@ const App = () => {
                         // if we get here that means we successfully voted, so let's set the "hasVoted" state to true
                         setHasVoted(true)
                         // and log out a success message
-                        console.log("successfully voted")
+                        console.log('successfully voted')
                       } catch (err) {
-                        console.error("failed to execute votes", err)
+                        console.error('failed to execute votes', err)
                       }
                     } catch (err) {
-                      console.error("failed to vote", err)
+                      console.error('failed to vote', err)
                     }
                   } catch (err) {
-                    console.error("failed to delegate tokens")
+                    console.error('failed to delegate tokens')
                   } finally {
                     // in *either* case we need to set the isVoting state to false to enable the button again
                     setIsVoting(false)
@@ -327,21 +327,21 @@ const App = () => {
                 }}
               >
                 {proposals.map((proposal, index) => (
-                  <div key={proposal.proposalId} className="card">
+                  <div key={proposal.proposalId} className='card'>
                     <h5>{proposal.description}</h5>
                     <div>
                       {proposal.votes.map((vote) => (
                         <div key={vote.type}>
                           <input
-                            type="radio"
-                            id={proposal.proposalId + "-" + vote.type}
+                            type='radio'
+                            id={proposal.proposalId + '-' + vote.type}
                             name={proposal.proposalId}
                             value={vote.type}
                             //default the "abstain" vote to chedked
                             defaultChecked={vote.type === 2}
                           />
                           <label
-                            htmlFor={proposal.proposalId + "-" + vote.type}
+                            htmlFor={proposal.proposalId + '-' + vote.type}
                           >
                             {vote.label}
                           </label>
@@ -350,12 +350,12 @@ const App = () => {
                     </div>
                   </div>
                 ))}
-                <button disabled={isVoting || hasVoted} type="submit">
+                <button disabled={isVoting || hasVoted} type='submit'>
                   {isVoting
-                    ? "Voting..."
+                    ? 'Voting...'
                     : hasVoted
-                    ? "You Already Voted"
-                    : "Submit Votes"}
+                    ? 'You Already Voted'
+                    : 'Submit Votes'}
                 </button>
                 <small>
                   This will trigger multiple transactions that you will need to
@@ -373,7 +373,7 @@ const App = () => {
     setIsClaiming(true)
     try {
       // Call bundleDropModule.claim("0", 1) to mint nft to user's wallet.
-      await bundleDropModule.claim("0", 1)
+      await bundleDropModule.claim('0', 1)
       // Set claim state.
       setHasClaimedNFT(true)
       // Show user their fancy new NFT!
@@ -381,7 +381,7 @@ const App = () => {
         `🌊 Successfully Minted! Check it out on OpenSea: https://testnets.opensea.io/assets/${bundleDropModule.address}/0`
       )
     } catch (error) {
-      console.error("failed to claim", error)
+      console.error('failed to claim', error)
     } finally {
       // Stop loading state.
       setIsClaiming(false)
@@ -390,11 +390,11 @@ const App = () => {
 
   // Render mint nft screen.
   return (
-    <div className="mint-nft">
-      {/* <Header /> */}
+    <div className='mint-nft'>
+      <Header />
       <h1>Mint your free MothershipDAO Membership NFT</h1>
       <button disabled={isClaiming} onClick={() => mintNft()}>
-        {isClaiming ? "Minting..." : "Mint your nft (FREE)"}
+        {isClaiming ? 'Minting...' : 'Mint your nft (FREE)'}
       </button>
     </div>
   )
